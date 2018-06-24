@@ -2,4 +2,6 @@
     <string name="app_name">MyNotes</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_note">NoteActivity</string>
+    <string name="title_here">Title here...</string>
+    <string name="content_here">Content here...</string>
 </resources>
