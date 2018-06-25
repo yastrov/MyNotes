@@ -2,6 +2,7 @@ package ru.yastrov.app.mynotes;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +46,26 @@ public class NoteActivity extends AppCompatActivity {
         }
         if (intent.getAction() == NOTE_ACTION_CREATE) {
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+
+        outState.putString(INTENT_EXTRA_FILENAME, fileName);
+        outState.putString("title", editTitle.getText().toString());
+        outState.putString("content", editContent.getText().toString());
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
+        fileName = savedInstanceState.getString(INTENT_EXTRA_FILENAME);
+        String str = savedInstanceState.getString("title");
+        editTitle.setText(str);
+        str = savedInstanceState.getString("content");
+        editContent.setText(str);
     }
 
 }
