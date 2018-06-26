@@ -4,4 +4,6 @@
     <string name="title_activity_note">NoteActivity</string>
     <string name="title_here">Title here...</string>
     <string name="content_here">Content here...</string>
+    <string name="error_cant_load_file">Error! Can\'t load file!</string>
+    <string name="note_saved">Note saved!</string>
 </resources>
