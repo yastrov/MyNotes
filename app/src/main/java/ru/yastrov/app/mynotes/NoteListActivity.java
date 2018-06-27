@@ -15,7 +15,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
@@ -70,6 +76,11 @@ public class NoteListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public boolean fileExists(String fname) {
+        final File file = getBaseContext().getFileStreamPath(fname);
+        return file.exists();
+    }
+
     private class ReadNoteListTask extends AsyncTask<Void, Void, List<NoteItem>> {
 
         @Override
@@ -89,7 +100,45 @@ public class NoteListActivity extends AppCompatActivity {
 
         private List<NoteItem> prepareNotes() {
             List<NoteItem> notes = new ArrayList<>();
+            File directory = getFilesDir();
+            File[] files = directory.listFiles();
+            for (int i = 0; i < files.length; ++i) {
+                NoteItem note = openFile(files[i].getPath());
+                notes.add(note);
+            }
+            //notes.sort(Comparator.comparing(NoteItem::getDate));
+            notes.sort(new Comparator<NoteItem>() {
+                @Override
+                public int compare(NoteItem a, NoteItem b) {
+                    return a.getDate().compareTo(b.getDate());
+                }
+            });
             return notes;
+        }
+
+        private NoteItem openFile(String fileName) {
+            NoteItem result = new NoteItem();
+            result.setFileName(fileName);
+            if (fileExists(fileName)) {
+                try {
+                    InputStream in = openFileInput(fileName);
+                    if ( in != null) {
+                        InputStreamReader tmp = new InputStreamReader(in);
+                        BufferedReader reader = new BufferedReader(tmp);
+                        String str;
+                        str = reader.readLine();
+                        if(str != null) {
+                            result.setTitle(str);
+                        }
+                        str = reader.readLine();
+                        final Date date = DateHelper.parseStringToDate(str);
+                        result.setDate(date);
+                    }
+                } catch (java.io.FileNotFoundException e) {} catch (Throwable t) {
+
+                }
+            }
+            return result;
         }
     }
 }
