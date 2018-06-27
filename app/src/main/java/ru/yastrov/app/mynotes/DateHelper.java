@@ -11,7 +11,7 @@ public final class DateHelper {
         return DateFormat.getDateInstance().format(now);
     }
 
-    public static Date psrseStringToDate(String str) {
+    public static Date parseStringToDate(String str) {
         DateFormat df = DateFormat.getDateInstance();
         try {
             return df.parse(str);
