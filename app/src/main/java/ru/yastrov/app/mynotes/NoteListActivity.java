@@ -1,6 +1,7 @@
 package ru.yastrov.app.mynotes;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ProgressBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
@@ -64,5 +68,28 @@ public class NoteListActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class ReadNoteListTask extends AsyncTask<Void, Void, List<NoteItem>> {
+
+        @Override
+        protected List<NoteItem> doInBackground(Void... files) {
+            return prepareNotes();
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected void onPostExecute(List<NoteItem> result) {
+
+        }
+
+        private List<NoteItem> prepareNotes() {
+            List<NoteItem> notes = new ArrayList<>();
+            return notes;
+        }
     }
 }
