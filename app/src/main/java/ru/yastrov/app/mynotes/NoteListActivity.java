@@ -79,6 +79,16 @@ public class NoteListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void showTaskWorked() {
+        progressBar.setVisibility(ProgressBar.VISIBLE);
+        notesRecycler.setEnabled(false);
+    }
+
+    private void showTaskStoped() {
+        progressBar.setVisibility(ProgressBar.INVISIBLE);
+        notesRecycler.setEnabled(true);
+    }
+
     public boolean fileExists(String fname) {
         final File file = getBaseContext().getFileStreamPath(fname);
         return file.exists();
@@ -93,11 +103,12 @@ public class NoteListActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
+            showTaskWorked();
         }
 
         @Override
         protected void onPostExecute(List<NoteItem> result) {
+            showTaskStoped();
             notesList = result;
             if(result != null ) {
                 nAdapter = new NotesAdapter(result, new RecyclerViewClickListener() {
