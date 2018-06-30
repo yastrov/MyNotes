@@ -27,6 +27,8 @@ import java.util.List;
 public class NoteListActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private RecyclerView notesRecycler;
+    private List<NoteItem> notesList = new ArrayList<>();
+    private NotesAdapter nAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,7 @@ public class NoteListActivity extends AppCompatActivity {
                 new LinearLayoutManager(getApplicationContext()); /*Or LinearLayoutManager(this)*/
         notesRecycler.setLayoutManager(mLayoutManager);
         notesRecycler.setItemAnimator(new DefaultItemAnimator());
+        new ReadNoteListTask().execute();
     }
 
     @Override
@@ -95,7 +98,23 @@ public class NoteListActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<NoteItem> result) {
-
+            notesList = result;
+            if(result != null ) {
+                nAdapter = new NotesAdapter(result, new RecyclerViewClickListener() {
+                    @Override
+                    public void onClick(View v, int position) {
+                        final String fileName = notesList.get(position).getFileName();
+                        Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                        intent.putExtra(NoteActivity.INTENT_EXTRA_FILENAME, fileName);
+                        intent.setAction(NoteActivity.NOTE_ACTION_OPEN);
+                        startActivity(intent);
+                    }
+                });
+                notesRecycler.setAdapter(nAdapter);
+            } else {
+                Snackbar.make(findViewById(android.R.id.content), getResources().getString(R.string.error_cant_load_file), Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
+            }
         }
 
         private List<NoteItem> prepareNotes() {
